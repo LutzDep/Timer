@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body
+        {
+            text-align: center;
+            background-color: rgb(28, 28, 28); 
+            color: white;           
+        }
+        .weiss
+        {
+            color: white;
+        }
+        .center
+        {
+            margin: 100px 10px;
+            font-size: 40px;
+        }
+        .timer
+        {
+            font-family: Tahoma;
+        }
+        .button 
+        {
+            font-size: 32px;
+            display: inline;
+            background-color: green;
+            padding: 0% 8%;
+        }
+        .reset
+        {
+            background-color: red;
+        }
+    </style>
+</head>
+<script>
+
+    const audio = new Audio("audio/digital wecker.wav");
+    let press = false;
+    let start_interval = 0;
+    let pause_interval = 0;
+    let time_left =  0;
+    let time_red = 0;
+
+    function start(min)
+    {
+        button1.innerHTML = "Pause";
+        document.getElementById("button2").style.display = "inline"; 
+
+        
+        if (press==false)
+        {
+            if (time_left==0)
+            {
+                time_left = min * 1000 * 60;
+                time_red = time_left / 10;
+            }
+            start_interval = setInterval(start_timer, 10);
+        }
+        else
+        {
+            pause_interval = setInterval(pause_timer, 0);
+        }
+
+        function start_timer()
+        {
+            press = true;
+
+            audio.pause();
+            audio.currentTime = 0;
+
+            time_left = time_left - 10;
+
+            let hours = "0";
+            let h = Math.floor(time_left / 3600000);
+            hours = String(h);
+
+            let minutes = "00";
+            let min = Math.floor((time_left - h*3600000) / 60000);
+            if (min<10)
+            {
+                minutes = String("0" + min);
+            }
+            else 
+            {
+                minutes = String(min);
+            }
+            
+            let seconds = "00";
+            let sec = Math.floor((time_left - h*3600000 - min*60000) / 1000);
+            if (sec<10)
+            {
+                seconds = String("0" + sec);
+            }
+            else
+            {
+                seconds = String(sec);
+            }
+
+            let milliseconds = "00";
+            let millisec = Math.floor((time_left - h*3600000 - min*60000 - sec*1000) / 10);
+            if (millisec<10)
+            {
+                milliseconds = String("0" + millisec);
+            }
+            else
+            {
+                milliseconds = String(millisec);
+            }
+
+            if (time_left<=time_red)
+            {
+                document.getElementById("timer").style.color = "red";
+            }
+
+            if (h==0 && min==0 && sec==0 && millisec==0)
+            {                
+                audio.play();
+                audio.loop = true;
+
+                press = false;
+                button1.innerHTML = "Start";
+                timer.innerHTML = "0:00:12,00"
+                document.getElementById("timer").style.color = "white";
+
+                clearInterval(start_interval);
+            }
+
+            time = hours + ":" + minutes + ":" + seconds + "," + milliseconds;
+            timer.innerHTML = time;
+        }
+
+        function pause_timer()
+        {
+            press = false;
+            
+            button1.innerHTML = "Weiter";
+            clearInterval(start_interval);
+            clearInterval(pause_interval);
+        }   
+
+    }
+
+    function reset()
+    {
+        timer.innerHTML = "0:00:12,00"
+        document.getElementById("timer").style.color = "white";
+        press = false;
+
+        audio.pause();
+        audio.currentTime = 0;
+
+        button1.innerHTML = "Start";
+        clearInterval(start_interval);
+        clearInterval(pause_interval);
+        time_left = 0
+        document.getElementById("button2").style.display = "none";
+    }
+</script>
+<body>
+    <div class="center weiss">
+        <h1>Timer</h1>
+    </div>
+    
+    <div class="center timer" id="timer">
+        0:00:12,00
+    </div>
+
+    <div class="center">
+        <button class="button reset" id="button2" onclick="reset()" style="display: none;">Reset</button>
+        <button class="button" id="button1" onClick="start(0.2)">Start</button>
+    </div>
+
+</body>
+</html>

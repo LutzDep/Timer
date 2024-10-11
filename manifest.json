@@ -1,0 +1,10 @@
+{
+    "name": "Timer",
+    "short_name": "Timer",
+    "theme_color": "#1c1c1c",
+    "background_color": "#1c1c1c",
+    "display": "fullscreen",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/"
+  }
